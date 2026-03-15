@@ -330,7 +330,7 @@
                     if (isNewSearch && videos.length === 0) {
                         hideAllStatusMessages();
                         noResultsMessage.classList.remove('hidden');
-                        reachedEnd = true; // Больше нечего грузить
+                        reachedEnd = true;
                         showLoading(false);
                         isLoading = false;
                         searchBtn.disabled = false;
@@ -386,7 +386,6 @@
                 }
 
                 currentQuery = query;
-                // Загружаем первую страницу
                 loadVideos(true);
             }
 
