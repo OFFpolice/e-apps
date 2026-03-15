@@ -204,7 +204,9 @@
                 if (tg.isVersionAtLeast('8.0')) {
                     tg.requestFullscreen();
                 }
+                tg.lockOrientation();
                 tg.disableVerticalSwipes();
+                tg.enableClosingConfirmation();
                 document.body.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#000');
                 document.body.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#fff');
                 document.body.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color || '#aaa');
