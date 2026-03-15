@@ -294,7 +294,6 @@
             }
 
             async function loadVideos(isNewSearch = false) {
-                // Проверки состояния
                 if (isLoading) return;
                 if (!currentQuery.trim()) {
                     hideAllStatusMessages();
