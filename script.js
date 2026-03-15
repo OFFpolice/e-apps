@@ -1,87 +1,11 @@
 const EPORNER_API = "https://www.eporner.com/api/v2/video/search/";
 
-const searchForm = document.getElementById("search-form");
-const searchInput = document.getElementById("search-input");
-const searchBtn = document.getElementById("search-btn");
-const videoContainer = document.getElementById("video-container");
-
-const loadingEl = document.getElementById("loading");
-const noResultsEl = document.getElementById("no-results");
-const endMessageEl = document.getElementById("end-message");
-const errorMessageEl = document.getElementById("error-message");
-
-// === Telegram WebApp ===
-let tg = null;
-
-if (window.Telegram && window.Telegram.WebApp) {
-    tg = window.Telegram.WebApp;
-
-    tg.ready();
-    tg.expand();
-    tg.disableVerticalSwipes();
-    tg.enableClosingConfirmation();
-    tg.lockOrientation();
-}
-
-const tabs = document.querySelectorAll(".tab");
-const links = document.querySelectorAll(".bottom-nav .nav-button");
-const loadedVideos = new WeakSet();
-
-function handleTabVideos(activeTabId) {
-    tabs.forEach(tab => {
-        const video = tab.querySelector(".bg-video");
-        if (!video) return;
-
-        if (tab.id === activeTabId) {
-            if (!loadedVideos.has(video)) {
-                video.src = video.dataset.src;
-                loadedVideos.add(video);
-            }
-            video.play().catch(() => {});
-        } else {
-            video.pause();
-        }
-    });
-}
-
-if (tg) {
-    tg.BackButton.onClick(() => {
-        setActiveTab("home");
-        tg.BackButton.hide();
-    });
-}
-
-function setActiveTab(target) {
-    const activeTabId = "tab-" + target;
-
-    tabs.forEach(t => t.classList.remove("active"));
-    document.getElementById(activeTabId).classList.add("active");
-
-    links.forEach(l => l.classList.remove("active"));
-    document.querySelector(`[data-tab="${target}"]`).classList.add("active");
-
-    handleTabVideos(activeTabId);
-
-    if (tg) {
-        target !== "home" ? tg.BackButton.show() : tg.BackButton.hide();
-    }
-}
-links.forEach(link => {
-    link.addEventListener("click", () => {
-        setActiveTab(link.dataset.tab);
-    });
-});
-
-setActiveTab("home");
-
-// === SEARCH STATE ===
 let currentQuery = "";
 let currentPage = 1;
 let totalPages = 0;
 let isLoading = false;
 let reachedEnd = false;
 
-// Build Eporner API URL
 function buildApiUrl(query, page) {
     return (
         EPORNER_API +
@@ -99,7 +23,6 @@ function buildApiUrl(query, page) {
     );
 }
 
-// Load videos
 async function loadVideos(isNewSearch = false) {
     if (isLoading || reachedEnd) return;
     if (!currentQuery) return;
@@ -150,7 +73,6 @@ async function loadVideos(isNewSearch = false) {
     isLoading = false;
 }
 
-// Render video cards
 function renderVideos(videos) {
     videos.forEach(video => {
         const thumb =
@@ -174,7 +96,6 @@ function renderVideos(videos) {
     });
 }
 
-// === Infinite scroll ===
 window.addEventListener("scroll", () => {
     if (reachedEnd || isLoading) return;
 
@@ -186,7 +107,6 @@ window.addEventListener("scroll", () => {
     }
 });
 
-// === Form ===
 const customForm = document.getElementById("custom-form");
 
 searchBtn.addEventListener("click", () => {
